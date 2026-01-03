@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import heroSvg from "../assets/hero_svg.svg";
+
+type Props = NonNullable<CollectionEntry<"pages">["data"]["hero"]> & {
+  backgroundImage?: ImageMetadata;
+};
+
+const { title, highlight, description, buttons, backgroundImage } =
+  Astro.props as Props;
+
+const bgImage = backgroundImage || heroSvg;
+---
+
+<section
+  id="hero-section"
+  class="relative min-h-screen flex items-center justify-center overflow-hidden bg-black transition-colors duration-300"
+>
+  <!-- Background Image -->
+  <div
+    class="absolute top-0 left-0 w-full h-full flex items-start justify-center pt-0 md:pt-0 z-0 pointer-events-none select-none"
+  >
+    <Image
+      src={bgImage}
+      alt="Hero Background"
+      class={backgroundImage
+        ? "absolute w-full h-full object-cover opacity-100 inset-0"
+        : "w-[90%] md:w-[80%] h-auto md:h-[85%] object-contain opacity-100"}
+    />
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+    <h1
+      class="text-4xl md:text-[48px] font-bold font-outfit mb-6 leading-tight mt-26"
+    >
+      <span class="block text-white">{title}</span>
+      <span class="block text-white">{highlight}</span>
+    </h1>
+
+    <p class="text-[#B4B4B4] text-lg md:text-xl max-w-2xl mx-auto mb-10">
+      {description}
+    </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      {
+        buttons.map((btn) => (
+          <a
+            href={btn.link}
+            class={`px-8 py-3 rounded-full font-bold tracking-wide w-full sm:w-auto border-2 ${
+              btn.variant === "primary"
+                ? "text-white border-transparent"
+                : "bg-white text-[#3253CC] border-[#3253CC]"
+            }`}
+            style={
+              btn.variant === "primary"
+                ? {
+                    background:
+                      "linear-gradient(#3253CC, #3253CC) padding-box, linear-gradient(to right, #859EF8, #3253CC) border-box",
+                  }
+                : {}
+            }
+          >
+            {btn.text}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
